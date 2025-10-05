@@ -73,7 +73,7 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark">
   <div class="container">
-    <a class="navbar-brand" href="#home">Keerthirajhan</a>
+    <a class="navbar-brand" href="#home">Portfolio</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -99,25 +99,33 @@
     Turning code into innovation.<br>
     Building the future with Digital Twin Technology.
   </p>
+
   <div data-aos="fade-up" data-aos-delay="400">
-    <a href="Keerthirajhan_Ravi_Resume.pdf" class="btn btn-primary btn-lg shadow" download>📄 Download Resume</a>
-<section id="intro-video" class="text-center p-4">
-  <!-- Optional Heading -->
-  <!-- <h2 class="mb-3">Intro Video</h2> -->
+    <a href="Keerthirajhan_Ravi_Resume.pdf" class="btn btn-primary btn-lg shadow" download>
+      📄 Download Resume
+    </a>
 
-  <div class="mx-auto max-w-5xl">
-    <iframe 
-      class="w-full h-64 sm:h-96"
-      src="https://www.youtube.com/embed/bYpATX_aihw" 
-      title="Intro Video" 
-      frameborder="0" 
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-      allowfullscreen>
-    </iframe>
-  </div>
-</section>
+    <!-- Intro Video Section -->
+    <section id="intro-video" class="text-center mt-4">
+      <!-- Play Button -->
+      <button id="playVideoBtn" class="btn btn-primary btn-lg shadow">
+        ▶️ Play Intro Video
+      </button>
 
-
+      <!-- Hidden Video Frame -->
+      <div id="videoFrame" class="mt-4 d-none">
+        <iframe 
+          width="560" 
+          height="315" 
+          class="rounded-4 w-100"
+          src="https://www.youtube.com/embed/bYpATX_aihw?autoplay=1" 
+          title="Intro Video"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      </div>
+    </section>
   </div>
 </section>
 
@@ -286,6 +294,14 @@
       .catch(() => {
         statusDiv.innerHTML = "<span class='text-danger'>Failed to send message. Try again.</span>";
       });
+  });
+</script>
+
+<script>
+  document.getElementById("playVideoBtn").addEventListener("click", function() {
+    this.classList.add("d-none"); // hide button
+    const videoFrame = document.getElementById("videoFrame");
+    videoFrame.classList.remove("d-none"); // show video
   });
 </script>
 
