@@ -15,7 +15,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* General Styles */
     body { scroll-behavior: smooth; background-color: #121212; color: #e0e0e0; font-family: 'Poppins', sans-serif; }
     section { padding: 80px 0; }
     .navbar { position: sticky; top: 0; z-index: 1000; background: rgba(18,18,18,0.9) !important; backdrop-filter: blur(6px); }
@@ -57,12 +56,41 @@
     .project-card .btn-outline-light:hover { background-color: #00f2fe; color: #121212; border-color: #00f2fe; }
 
     /* Contact Form Styling */
-    .contact-card { background: linear-gradient(145deg, #1e1e1e, #2a2a2a); border: 1px solid #00f2fe; transition: all 0.4s ease; }
-    .contact-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0, 242, 254, 0.4); }
-    .contact-card .form-control { background-color: #121212; border: 1px solid #333; color: #e0e0e0; border-radius: 8px; transition: all 0.3s ease; }
-    .contact-card .form-control:focus { border-color: #00f2fe; box-shadow: 0 0 10px rgba(0, 242, 254, 0.5); background-color: #1e1e1e; }
-    .contact-card button { background-color: #00f2fe; border: none; font-weight: 600; transition: all 0.3s ease; }
-    .contact-card button:hover { background-color: #0072ff; transform: scale(1.05); }
+    .contact-card { 
+  background: linear-gradient(145deg, #1e1e1e, #2a2a2a); 
+  border: 1px solid #00f2fe; 
+  transition: all 0.4s ease; 
+}
+.contact-card:hover { 
+  transform: translateY(-5px); 
+  box-shadow: 0 20px 40px rgba(0, 242, 254, 0.4); 
+}
+.contact-card .form-control { 
+  background-color: #121212; 
+  border: 1px solid #333; 
+  color: #e0e0e0; 
+  border-radius: 8px; 
+  transition: all 0.3s ease; 
+}
+.contact-card .form-control:focus { 
+  border-color: #00f2fe; 
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.5); 
+  background-color: #1e1e1e; 
+}
+.contact-card .form-control::placeholder {
+  color: #b0c4de;  /* Make placeholder more visible */
+  opacity: 1;       /* Ensure full visibility */
+}
+.contact-card button { 
+  background-color: #00f2fe; 
+  border: none; 
+  font-weight: 600; 
+  transition: all 0.3s ease; 
+}
+.contact-card button:hover { 
+  background-color: #0072ff; 
+  transform: scale(1.05); 
+}
 
     /* Footer */
     footer { background-color: #1c1c1c; padding: 20px 0; text-align: center; color: #aaa; }
@@ -115,10 +143,11 @@
       <!-- Hidden Video Frame -->
       <div id="videoFrame" class="mt-4 d-none">
         <iframe 
+          id="introVideo"
           width="560" 
           height="315" 
           class="rounded-4 w-100"
-          src="https://www.youtube.com/embed/bYpATX_aihw?autoplay=1" 
+          src="" 
           title="Intro Video"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -254,11 +283,9 @@
   &copy; 2025 Keerthirajhan. All Rights Reserved.
 </footer>
 
-<!-- Bootstrap JS -->
+<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- AOS JS -->
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
 
 <script>
@@ -278,12 +305,10 @@
   }
   document.addEventListener("DOMContentLoaded", typeEffect);
 
-  // EmailJS Contact Form Integration
+  // EmailJS Contact Form
   emailjs.init("fjc_wm45r_1WgbMm_"); // Replace with your EmailJS public key
-
   const form = document.getElementById("contact-form");
   const statusDiv = document.getElementById("form-status");
-
   form.addEventListener("submit", function(e) {
     e.preventDefault();
     emailjs.sendForm("service_b1bed69", "template_k1fh4mc", this)
@@ -295,13 +320,34 @@
         statusDiv.innerHTML = "<span class='text-danger'>Failed to send message. Try again.</span>";
       });
   });
-</script>
 
-<script>
-  document.getElementById("playVideoBtn").addEventListener("click", function() {
-    this.classList.add("d-none"); // hide button
-    const videoFrame = document.getElementById("videoFrame");
-    videoFrame.classList.remove("d-none"); // show video
+  // Play Video Button
+  const playBtn = document.getElementById("playVideoBtn");
+  const videoFrame = document.getElementById("videoFrame");
+  const introVideo = document.getElementById("introVideo");
+
+  playBtn.addEventListener("click", function() {
+    playBtn.classList.add("d-none"); // hide button
+    videoFrame.classList.remove("d-none"); // show iframe
+    introVideo.src = "https://www.youtube.com/embed/bYpATX_aihw?autoplay=1&enablejsapi=1";
+
+    // Poll YouTube player for end
+    const playerCheck = setInterval(() => {
+      const iframeWindow = introVideo.contentWindow;
+      if (!iframeWindow) return;
+      // postMessage API to detect end
+      iframeWindow.postMessage('{"event":"listening","id":1,"channel":"widget"}', '*');
+    }, 1000);
+
+    window.addEventListener("message", function(event) {
+      if (event.data && event.data.event === "onStateChange" && event.data.info === 0) {
+        // Video ended
+        introVideo.src = "";
+        videoFrame.classList.add("d-none");
+        playBtn.classList.remove("d-none");
+        clearInterval(playerCheck);
+      }
+    });
   });
 </script>
 
